@@ -22,6 +22,7 @@ import { nodeConfig, NodeType } from '@/types/workflow';
 import { CustomNode } from './custom-node';
 import { NodePanel } from './node-panel';
 import { PropertiesPanel } from './properties-panel';
+import { useLocale } from '@/contexts/locale-context';
 
 // 使用 any 类型避免复杂的泛型约束
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -39,6 +40,7 @@ const nodeTypes: Record<string, any> = {
 export function WorkflowEditor() {
   const { currentWorkflow, addNode, addEdge: addEdgeToStore, deleteEdge, selectNode, selectedNodeId, deleteNode } =
     useWorkflowStore();
+  const { t } = useLocale();
 
   // 转换工作流节点到 ReactFlow 格式
   const initialNodes = useMemo(() => {
@@ -140,7 +142,7 @@ export function WorkflowEditor() {
     return (
       <div className="flex h-full items-center justify-center bg-gray-50">
         <div className="text-center">
-          <p className="text-gray-500 mb-4">请创建或选择一个工作流</p>
+          <p className="text-gray-500 mb-4">{t('prompt.selectWorkflow')}</p>
         </div>
       </div>
     );

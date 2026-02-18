@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 // 强制动态渲染
 export const dynamic = 'force-dynamic';
 import { useAuth } from '@/hooks/use-auth';
+import { useLocale } from '@/contexts/locale-context';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,6 +19,7 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const { signIn, signUp } = useAuth();
+  const { t } = useLocale();
   const router = useRouter();
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -46,7 +48,7 @@ export default function AuthPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      setError('注册成功！请检查邮箱验证。');
+      setError(t('auth.register.checkEmail'));
       setLoading(false);
     }
   };
@@ -59,19 +61,19 @@ export default function AuthPage() {
             <span className="text-3xl">🤖</span>
             <span className="text-2xl font-bold">AI Workflow</span>
           </div>
-          <CardDescription>AI 原生工作流自动化平台</CardDescription>
+          <CardDescription>{t('landing.hero.subtitle')}</CardDescription>
         </CardHeader>
         <CardContent>
           <Tabs defaultValue="login">
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="login">登录</TabsTrigger>
-              <TabsTrigger value="register">注册</TabsTrigger>
+              <TabsTrigger value="login">{t('auth.tabs.login')}</TabsTrigger>
+              <TabsTrigger value="register">{t('auth.tabs.register')}</TabsTrigger>
             </TabsList>
 
             <TabsContent value="login">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="email">邮箱</Label>
+                  <Label htmlFor="email">{t('auth.login.email')}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -82,7 +84,7 @@ export default function AuthPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="password">密码</Label>
+                  <Label htmlFor="password">{t('auth.login.password')}</Label>
                   <Input
                     id="password"
                     type="password"
@@ -94,7 +96,7 @@ export default function AuthPage() {
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? '登录中...' : '登录'}
+                  {loading ? t('auth.login.logging') : t('auth.login.submit')}
                 </Button>
               </form>
             </TabsContent>
@@ -102,7 +104,7 @@ export default function AuthPage() {
             <TabsContent value="register">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="register-email">邮箱</Label>
+                  <Label htmlFor="register-email">{t('auth.login.email')}</Label>
                   <Input
                     id="register-email"
                     type="email"
@@ -113,11 +115,11 @@ export default function AuthPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="register-password">密码</Label>
+                  <Label htmlFor="register-password">{t('auth.login.password')}</Label>
                   <Input
                     id="register-password"
                     type="password"
-                    placeholder="至少6位"
+                    placeholder="••••••••"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
@@ -126,15 +128,15 @@ export default function AuthPage() {
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
                 <Button type="submit" className="w-full" disabled={loading}>
-                  {loading ? '注册中...' : '注册'}
+                  {loading ? t('auth.register.registering') : t('auth.register.submit')}
                 </Button>
               </form>
             </TabsContent>
           </Tabs>
 
           <div className="mt-6 text-center text-sm text-gray-500">
-            <p>免费版：100次/月，5个工作流</p>
-            <p>专业版：¥49/月，5000次/月</p>
+            <p>{t('auth.pricing.free')}</p>
+            <p>{t('auth.pricing.pro')}</p>
           </div>
         </CardContent>
       </Card>

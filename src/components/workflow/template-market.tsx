@@ -5,6 +5,7 @@ import { useWorkflowStore } from '@/store/workflow-store';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { nodeConfig } from '@/types/workflow';
+import { useLocale } from '@/contexts/locale-context';
 
 interface TemplateMarketProps {
   onClose?: () => void;
@@ -12,6 +13,7 @@ interface TemplateMarketProps {
 
 export function TemplateMarket({ onClose }: TemplateMarketProps) {
   const { createWorkflow } = useWorkflowStore();
+  const { t } = useLocale();
 
   const handleUseTemplate = (templateIndex: number) => {
     const template = workflowTemplates[templateIndex];
@@ -19,7 +21,7 @@ export function TemplateMarket({ onClose }: TemplateMarketProps) {
 
     // 创建新工作流
     createWorkflow(
-      template.name || '从模板创建',
+      template.name || t('templates.createFromTemplate'),
       template.description
     );
 
@@ -32,12 +34,12 @@ export function TemplateMarket({ onClose }: TemplateMarketProps) {
     <div className="p-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold">模板市场</h2>
-          <p className="text-gray-500">选择一个模板快速开始</p>
+          <h2 className="text-2xl font-bold">{t('templates.title')}</h2>
+          <p className="text-gray-500">{t('templates.subtitle')}</p>
         </div>
         {onClose && (
           <Button variant="outline" onClick={onClose}>
-            关闭
+            {t('templates.close')}
           </Button>
         )}
       </div>
@@ -76,7 +78,7 @@ export function TemplateMarket({ onClose }: TemplateMarketProps) {
 
                 {/* 统计 */}
                 <div className="text-sm text-gray-500">
-                  {template.nodes?.length} 个节点 · {template.edges?.length} 条连线
+                  {template.nodes?.length} {t('templates.nodes')} · {template.edges?.length} {t('templates.connections')}
                 </div>
 
                 {/* 使用按钮 */}
@@ -84,7 +86,7 @@ export function TemplateMarket({ onClose }: TemplateMarketProps) {
                   className="w-full"
                   onClick={() => handleUseTemplate(index)}
                 >
-                  使用此模板
+                  {t('templates.useTemplate')}
                 </Button>
               </div>
             </CardContent>
@@ -94,11 +96,11 @@ export function TemplateMarket({ onClose }: TemplateMarketProps) {
 
       {/* 自定义模板提示 */}
       <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-        <h3 className="font-semibold mb-2">💡 提示</h3>
+        <h3 className="font-semibold mb-2">{t('templates.tip')}</h3>
         <ul className="text-sm text-gray-600 space-y-1">
-          <li>• 模板可以自由修改，不会影响原始模板</li>
-          <li>• 你可以保存自己的工作流为模板</li>
-          <li>• 高级模板需要专业版订阅</li>
+          <li>{t('templates.tip1')}</li>
+          <li>{t('templates.tip2')}</li>
+          <li>{t('templates.tip3')}</li>
         </ul>
       </div>
     </div>

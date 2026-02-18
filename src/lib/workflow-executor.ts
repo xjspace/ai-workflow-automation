@@ -258,6 +258,9 @@ export class WorkflowExecutor {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async executeLoop(_node: WorkflowNode, _context: ExecutionContext): Promise<any> {
     // 循环节点需要特殊处理，这里简化实现
+    // _node 和 _context 参数将在未来实现中使用
+    void _node;
+    void _context;
     return { loop: true };
   }
 

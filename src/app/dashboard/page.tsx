@@ -4,10 +4,12 @@ import { useEffect, useRef } from 'react';
 import { Header } from '@/components/layout/header';
 import { WorkflowEditor } from '@/components/workflow/workflow-editor';
 import { useWorkflowStore } from '@/store/workflow-store';
+import { useLocale } from '@/contexts/locale-context';
 
 export default function Home() {
   const { workflows, createWorkflow, loadWorkflow, currentWorkflow } = useWorkflowStore();
   const initializedRef = useRef(false);
+  const { t } = useLocale();
 
   // 初始化逻辑 - 只在客户端执行一次
   useEffect(() => {
@@ -16,9 +18,9 @@ export default function Home() {
 
     // 如果没有工作流，创建一个示例
     if (workflows.length === 0) {
-      createWorkflow('示例工作流', '这是一个示例 AI 工作流');
+      createWorkflow(t('dashboard.exampleWorkflow'), t('dashboard.exampleWorkflowDesc'));
     }
-  }, [workflows.length, createWorkflow]);
+  }, [workflows.length, createWorkflow, t]);
 
   // 自动加载第一个工作流
   useEffect(() => {

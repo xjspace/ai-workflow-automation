@@ -5,32 +5,13 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/hooks/use-auth';
+import { useLocale } from '@/contexts/locale-context';
 import { supabase } from '@/lib/supabase';
 import type { Workflow } from '@/types/database';
 
-// 简单的相对时间格式化
-function formatRelativeTime(dateString: string): string {
-  const date = new Date(dateString);
-  const now = new Date();
-  const diffMs = now.getTime() - date.getTime();
-  const diffMins = Math.floor(diffMs / 60000);
-  const diffHours = Math.floor(diffMs / 3600000);
-  const diffDays = Math.floor(diffMs / 86400000);
-
-  if (diffMins < 1) return '刚刚';
-  if (diffMins < 60) return `${diffMins} 分钟前`;
-  if (diffHours < 24) return `${diffHours} 小时前`;
-  if (diffDays < 7) return `${diffDays} 天前`;
-  return date.toLocaleDateString('zh-CN');
-}
-
-interface WorkflowListProps {
-  onSelect: (workflow: Workflow) => void;
-  onCreateNew: () => void;
-}
-
-export function WorkflowList({ onSelect, onCreateNew }: WorkflowListProps) {
+export function WorkflowList({ onSelect, onCreateNew }: { onSelect: (workflow: Workflow) => void; onCreateNew: () => void }) {
   const { user } = useAuth();
+  const { t, formatRelativeTime } = useLocale();
   const [workflows, setWorkflows] = useState<Workflow[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -39,7 +20,6 @@ export function WorkflowList({ onSelect, onCreateNew }: WorkflowListProps) {
       setLoading(true);
       try {
         if (user) {
-          // 已登录用户从数据库加载
           const { data, error } = await supabase
             .from('workflows')
             .select('*')
@@ -51,7 +31,7 @@ export function WorkflowList({ onSelect, onCreateNew }: WorkflowListProps) {
           }
         }
       } catch (error) {
-        console.error('加载工作流失败:', error);
+        console.error('Failed to load workflows:', error);
       } finally {
         setLoading(false);
       }
@@ -62,7 +42,7 @@ export function WorkflowList({ onSelect, onCreateNew }: WorkflowListProps) {
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!confirm('确定要删除这个工作流吗？')) return;
+    if (!confirm(t('workflows.confirmDelete'))) return;
 
     try {
       if (user) {
@@ -70,14 +50,14 @@ export function WorkflowList({ onSelect, onCreateNew }: WorkflowListProps) {
       }
       setWorkflows(prev => prev.filter(w => w.id !== id));
     } catch (error) {
-      console.error('删除失败:', error);
+      console.error('Delete failed:', error);
     }
   };
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="text-gray-500">加载中...</div>
+        <div className="text-gray-500">{t('common.loading')}</div>
       </div>
     );
   }
@@ -86,17 +66,17 @@ export function WorkflowList({ onSelect, onCreateNew }: WorkflowListProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold">我的工作流</h2>
-          <p className="text-gray-500">管理和编辑你的工作流</p>
+          <h2 className="text-2xl font-bold">{t('workflows.title')}</h2>
+          <p className="text-gray-500">{t('workflows.subtitle')}</p>
         </div>
-        <Button onClick={onCreateNew}>创建新工作流</Button>
+        <Button onClick={onCreateNew}>{t('workflows.createNew')}</Button>
       </div>
 
       {workflows.length === 0 ? (
         <Card>
           <CardContent className="flex flex-col items-center justify-center h-64">
-            <p className="text-gray-500 mb-4">还没有保存的工作流</p>
-            <Button onClick={onCreateNew}>创建第一个工作流</Button>
+            <p className="text-gray-500 mb-4">{t('workflows.empty')}</p>
+            <Button onClick={onCreateNew}>{t('workflows.createFirst')}</Button>
           </CardContent>
         </Card>
       ) : (
@@ -111,17 +91,17 @@ export function WorkflowList({ onSelect, onCreateNew }: WorkflowListProps) {
                 <div className="flex items-start justify-between">
                   <CardTitle className="text-lg">{workflow.name}</CardTitle>
                   <Badge variant={workflow.is_active ? 'default' : 'secondary'}>
-                    {workflow.is_active ? '启用' : '禁用'}
+                    {workflow.is_active ? t('workflows.enabled') : t('workflows.disabled')}
                   </Badge>
                 </div>
                 <CardDescription className="line-clamp-2">
-                  {workflow.description || '暂无描述'}
+                  {workflow.description || t('workflows.noDescription')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center justify-between text-sm text-gray-500">
                   <span>
-                    {workflow.nodes.length} 个节点 · {workflow.edges.length} 条连线
+                    {workflow.nodes.length} {t('workflows.nodes')} · {workflow.edges.length} {t('workflows.edges')}
                   </span>
                   <span>
                     {formatRelativeTime(workflow.updated_at)}
@@ -134,7 +114,7 @@ export function WorkflowList({ onSelect, onCreateNew }: WorkflowListProps) {
                     className="flex-1"
                     onClick={() => onSelect(workflow)}
                   >
-                    编辑
+                    {t('common.edit')}
                   </Button>
                   <Button
                     variant="outline"
@@ -142,7 +122,7 @@ export function WorkflowList({ onSelect, onCreateNew }: WorkflowListProps) {
                     className="text-red-600 hover:text-red-700"
                     onClick={(e) => handleDelete(workflow.id, e)}
                   >
-                    删除
+                    {t('common.delete')}
                   </Button>
                 </div>
               </CardContent>

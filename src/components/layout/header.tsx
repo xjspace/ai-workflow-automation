@@ -3,12 +3,15 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { useWorkflowStore } from '@/store/workflow-store';
+import { useLocale } from '@/contexts/locale-context';
+import { LocaleSwitcher } from '@/components/ui/locale-switcher';
 
 export function Header() {
   const { createWorkflow, workflows, loadWorkflow, currentWorkflow } = useWorkflowStore();
+  const { t } = useLocale();
 
   const handleCreate = () => {
-    const name = prompt('输入工作流名称:', '新建工作流');
+    const name = prompt(t('workflows.createNew') + ':', 'New Workflow');
     if (name) {
       createWorkflow(name);
     }
@@ -28,13 +31,10 @@ export function Header() {
             size="sm"
             className={currentWorkflow ? 'text-gray-600' : 'text-gray-400'}
           >
-            编辑器
+            {t('nav.dashboard')}
           </Button>
           <Button variant="ghost" size="sm" className="text-gray-400">
-            模板
-          </Button>
-          <Button variant="ghost" size="sm" className="text-gray-400">
-            文档
+            {t('nav.templates')}
           </Button>
         </nav>
       </div>
@@ -46,7 +46,7 @@ export function Header() {
             onChange={(e) => loadWorkflow(e.target.value)}
             className="h-8 px-2 text-sm border border-gray-200 rounded-md bg-white"
           >
-            <option value="">选择工作流</option>
+            <option value="">{t('common.select')}</option>
             {workflows.map((w) => (
               <option key={w.id} value={w.id}>
                 {w.name}
@@ -56,12 +56,14 @@ export function Header() {
         )}
 
         <Button size="sm" onClick={handleCreate}>
-          + 新建
+          + {t('common.create')}
         </Button>
 
         <Button variant="default" size="sm">
-          运行
+          Run
         </Button>
+
+        <LocaleSwitcher />
       </div>
     </header>
   );

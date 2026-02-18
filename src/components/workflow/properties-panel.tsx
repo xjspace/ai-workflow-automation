@@ -15,6 +15,7 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
+import { useLocale } from '@/contexts/locale-context';
 
 const aiModels = {
   claude: ['claude-3-5-sonnet-20241022', 'claude-3-5-haiku-20241022'],
@@ -23,24 +24,53 @@ const aiModels = {
   zhipu: ['glm-4', 'glm-4-flash'],
 };
 
-const aiOperations = [
-  { value: 'generate', label: '文本生成' },
-  { value: 'analyze', label: '文本分析' },
-  { value: 'extract', label: '信息提取' },
-  { value: 'summarize', label: '摘要总结' },
-  { value: 'translate', label: '翻译' },
-];
-
 export function PropertiesPanel() {
   const { currentWorkflow, selectedNodeId, updateNode, getNodeById } = useWorkflowStore();
+  const { t, locale } = useLocale();
 
   const selectedNode = selectedNodeId ? getNodeById(selectedNodeId) : undefined;
   const config = selectedNode ? nodeConfig[selectedNode.type] : null;
 
+  // AI operation labels
+  const aiOperations = [
+    { value: 'generate', label: t('ai.operations.generate') },
+    { value: 'analyze', label: t('ai.operations.analyze') },
+    { value: 'extract', label: t('ai.operations.extract') },
+    { value: 'summarize', label: t('ai.operations.summarize') },
+    { value: 'translate', label: t('ai.operations.translate') },
+  ];
+
+  // Trigger type labels
+  const triggerTypes = [
+    { value: 'manual', label: t('trigger.manual') },
+    { value: 'webhook', label: t('trigger.webhook') },
+    { value: 'schedule', label: t('trigger.schedule') },
+  ];
+
+  // Node type labels
+  const nodeLabels: Record<string, Record<string, string>> = {
+    trigger: { en: 'Trigger', zh: '触发器' },
+    webhook: { en: 'Webhook', zh: 'Webhook' },
+    schedule: { en: 'Schedule', zh: '定时触发' },
+    ai: { en: 'AI', zh: 'AI' },
+    http: { en: 'HTTP Request', zh: 'HTTP 请求' },
+    transform: { en: 'Transform', zh: '数据转换' },
+    condition: { en: 'Condition', zh: '条件判断' },
+    loop: { en: 'Loop', zh: '循环' },
+  };
+
+  // Provider labels
+  const providerLabels: Record<string, Record<string, string>> = {
+    claude: { en: 'Claude (Anthropic)', zh: 'Claude (Anthropic)' },
+    openai: { en: 'OpenAI', zh: 'OpenAI' },
+    deepseek: { en: 'DeepSeek', zh: 'DeepSeek' },
+    zhipu: { en: 'Zhipu AI', zh: '智谱 AI' },
+  };
+
   if (!currentWorkflow || !selectedNode || !config) {
     return (
       <div className="w-64 bg-white border-l border-gray-200 flex items-center justify-center">
-        <p className="text-gray-400 text-sm">选择节点查看属性</p>
+        <p className="text-gray-400 text-sm">{t('editor.selectNode')}</p>
       </div>
     );
   }
@@ -59,17 +89,19 @@ export function PropertiesPanel() {
           >
             {config.icon}
           </span>
-          <h3 className="font-semibold text-sm text-gray-700">{config.label}</h3>
+          <h3 className="font-semibold text-sm text-gray-700">
+            {nodeLabels[selectedNode.type]?.[locale] || config.label}
+          </h3>
         </div>
-        <p className="text-xs text-gray-400 mt-1">配置节点参数</p>
+        <p className="text-xs text-gray-400 mt-1">{t('editor.configureNode')}</p>
       </div>
 
       <ScrollArea className="flex-1">
         <div className="p-3 space-y-4">
-          {/* 通用属性 */}
+          {/* Common Properties */}
           <div className="space-y-2">
             <Label htmlFor="label" className="text-xs">
-              节点名称
+              {t('editor.nodeName')}
             </Label>
             <Input
               id="label"
@@ -81,11 +113,11 @@ export function PropertiesPanel() {
 
           <Separator />
 
-          {/* AI 节点属性 */}
+          {/* AI Node Properties */}
           {selectedNode.type === 'ai' && (
             <>
               <div className="space-y-2">
-                <Label className="text-xs">AI 服务商</Label>
+                <Label className="text-xs">{t('ai.provider')}</Label>
                 <Select
                   value={(selectedNode.data as AINodeData).provider}
                   onValueChange={(value) => handleUpdate({ provider: value })}
@@ -94,16 +126,17 @@ export function PropertiesPanel() {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="claude">Claude (Anthropic)</SelectItem>
-                    <SelectItem value="openai">OpenAI</SelectItem>
-                    <SelectItem value="deepseek">DeepSeek</SelectItem>
-                    <SelectItem value="zhipu">智谱 AI</SelectItem>
+                    {Object.keys(aiModels).map((provider) => (
+                      <SelectItem key={provider} value={provider}>
+                        {providerLabels[provider]?.[locale] || provider}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-2">
-                <Label className="text-xs">模型</Label>
+                <Label className="text-xs">{t('ai.model')}</Label>
                 <Select
                   value={(selectedNode.data as AINodeData).model}
                   onValueChange={(value) => handleUpdate({ model: value })}
@@ -122,7 +155,7 @@ export function PropertiesPanel() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-xs">操作类型</Label>
+                <Label className="text-xs">{t('ai.operation')}</Label>
                 <Select
                   value={(selectedNode.data as AINodeData).operation}
                   onValueChange={(value) => handleUpdate({ operation: value })}
@@ -141,17 +174,17 @@ export function PropertiesPanel() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-xs">提示词 (Prompt)</Label>
+                <Label className="text-xs">{t('ai.prompt')}</Label>
                 <Textarea
                   value={(selectedNode.data as AINodeData).prompt}
                   onChange={(e) => handleUpdate({ prompt: e.target.value })}
-                  placeholder="输入提示词..."
+                  placeholder={locale === 'zh' ? '输入提示词...' : 'Enter prompt...'}
                   className="min-h-[100px] text-sm"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label className="text-xs">Temperature</Label>
+                <Label className="text-xs">{t('ai.temperature')}</Label>
                 <Input
                   type="number"
                   min={0}
@@ -165,11 +198,11 @@ export function PropertiesPanel() {
             </>
           )}
 
-          {/* HTTP 节点属性 */}
+          {/* HTTP Node Properties */}
           {selectedNode.type === 'http' && (
             <>
               <div className="space-y-2">
-                <Label className="text-xs">请求方法</Label>
+                <Label className="text-xs">{t('http.method')}</Label>
                 <Select
                   value={(selectedNode.data as HTTPNodeData).method}
                   onValueChange={(value) => handleUpdate({ method: value })}
@@ -188,7 +221,7 @@ export function PropertiesPanel() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-xs">URL</Label>
+                <Label className="text-xs">{t('http.url')}</Label>
                 <Input
                   value={(selectedNode.data as HTTPNodeData).url}
                   onChange={(e) => handleUpdate({ url: e.target.value })}
@@ -198,7 +231,7 @@ export function PropertiesPanel() {
               </div>
 
               <div className="space-y-2">
-                <Label className="text-xs">请求体 (JSON)</Label>
+                <Label className="text-xs">{t('http.body')}</Label>
                 <Textarea
                   value={(selectedNode.data as HTTPNodeData).body || ''}
                   onChange={(e) => handleUpdate({ body: e.target.value })}
@@ -209,10 +242,10 @@ export function PropertiesPanel() {
             </>
           )}
 
-          {/* 条件节点属性 */}
+          {/* Condition Node Properties */}
           {selectedNode.type === 'condition' && (
             <div className="space-y-2">
-              <Label className="text-xs">条件表达式</Label>
+              <Label className="text-xs">{t('condition.expression')}</Label>
               <Textarea
                 value={(selectedNode.data as ConditionNodeData).expression}
                 onChange={(e) => handleUpdate({ expression: e.target.value })}
@@ -220,15 +253,15 @@ export function PropertiesPanel() {
                 className="min-h-[60px] text-sm font-mono"
               />
               <p className="text-xs text-gray-400">
-                使用 JavaScript 表达式，可访问前序节点输出
+                {t('condition.hint')}
               </p>
             </div>
           )}
 
-          {/* 触发器节点属性 */}
+          {/* Trigger Node Properties */}
           {selectedNode.type === 'trigger' && (
             <div className="space-y-2">
-              <Label className="text-xs">触发类型</Label>
+              <Label className="text-xs">{t('trigger.type')}</Label>
               <Select
                 value={(selectedNode.data as TriggerNodeData).type || 'manual'}
                 onValueChange={(value) => handleUpdate({ type: value })}
@@ -237,9 +270,11 @@ export function PropertiesPanel() {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="manual">手动触发</SelectItem>
-                  <SelectItem value="webhook">Webhook</SelectItem>
-                  <SelectItem value="schedule">定时触发</SelectItem>
+                  {triggerTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -249,7 +284,7 @@ export function PropertiesPanel() {
 
       <div className="p-3 border-t border-gray-200">
         <Button variant="outline" size="sm" className="w-full">
-          测试节点
+          {t('editor.testNode')}
         </Button>
       </div>
     </div>
