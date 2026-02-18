@@ -1,17 +1,17 @@
 import type { WorkflowDefinition } from '@/types/workflow';
 
-// 预置模板
+// Pre-built templates
 export const workflowTemplates: Partial<WorkflowDefinition>[] = [
   {
-    name: 'AI 文本生成',
-    description: '使用 AI 生成文本内容',
+    name: 'AI Text Generation',
+    description: 'Generate text content using AI',
     nodes: [
       {
         id: 'trigger-1',
         type: 'trigger',
         position: { x: 100, y: 200 },
         data: {
-          label: '开始',
+          label: 'Start',
           type: 'manual',
         },
       },
@@ -20,11 +20,11 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
         type: 'ai',
         position: { x: 350, y: 200 },
         data: {
-          label: 'AI 生成',
+          label: 'AI Generate',
           provider: 'claude',
           model: 'claude-3-5-sonnet-20241022',
           operation: 'generate',
-          prompt: '请根据以下主题生成一篇文章：{{input.topic}}',
+          prompt: 'Generate an article based on the following topic: {{input.topic}}',
           temperature: 0.7,
         },
       },
@@ -35,15 +35,15 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
   },
 
   {
-    name: 'HTTP 数据获取',
-    description: '从 API 获取数据并处理',
+    name: 'HTTP Data Fetch',
+    description: 'Fetch and process data from API',
     nodes: [
       {
         id: 'trigger-1',
         type: 'trigger',
         position: { x: 100, y: 200 },
         data: {
-          label: '开始',
+          label: 'Start',
           type: 'manual',
         },
       },
@@ -52,7 +52,7 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
         type: 'http',
         position: { x: 350, y: 200 },
         data: {
-          label: '获取数据',
+          label: 'Fetch Data',
           method: 'GET',
           url: 'https://api.example.com/data',
         },
@@ -62,7 +62,7 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
         type: 'transform',
         position: { x: 600, y: 200 },
         data: {
-          label: '提取字段',
+          label: 'Extract Fields',
           expression: 'nodeOutputs["http-1"].data',
         },
       },
@@ -74,15 +74,15 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
   },
 
   {
-    name: 'AI 内容分析',
-    description: '使用 AI 分析文本内容',
+    name: 'AI Content Analysis',
+    description: 'Analyze text content using AI',
     nodes: [
       {
         id: 'trigger-1',
         type: 'trigger',
         position: { x: 100, y: 200 },
         data: {
-          label: '开始',
+          label: 'Start',
           type: 'manual',
         },
       },
@@ -91,11 +91,11 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
         type: 'ai',
         position: { x: 350, y: 200 },
         data: {
-          label: '情感分析',
+          label: 'Sentiment Analysis',
           provider: 'claude',
           model: 'claude-3-5-sonnet-20241022',
           operation: 'analyze',
-          prompt: '请分析以下文本的情感倾向（正面/负面/中性），并给出理由：\n\n{{input.text}}',
+          prompt: 'Analyze the sentiment of the following text (positive/negative/neutral) and explain why:\n\n{{input.text}}',
           temperature: 0.3,
         },
       },
@@ -106,15 +106,15 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
   },
 
   {
-    name: '条件分支处理',
-    description: '根据条件执行不同分支',
+    name: 'Conditional Branching',
+    description: 'Execute different branches based on conditions',
     nodes: [
       {
         id: 'trigger-1',
         type: 'trigger',
         position: { x: 100, y: 200 },
         data: {
-          label: '开始',
+          label: 'Start',
           type: 'manual',
         },
       },
@@ -123,7 +123,7 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
         type: 'condition',
         position: { x: 350, y: 200 },
         data: {
-          label: '判断',
+          label: 'Check Score',
           expression: 'input.score > 60',
         },
       },
@@ -132,11 +132,11 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
         type: 'ai',
         position: { x: 600, y: 100 },
         data: {
-          label: '通过处理',
+          label: 'Pass Handler',
           provider: 'claude',
           model: 'claude-3-5-sonnet-20241022',
           operation: 'generate',
-          prompt: '恭喜通过！分数：{{input.score}}',
+          prompt: 'Congratulations on passing! Your score: {{input.score}}',
           temperature: 0.7,
         },
       },
@@ -145,11 +145,11 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
         type: 'ai',
         position: { x: 600, y: 300 },
         data: {
-          label: '未通过处理',
+          label: 'Fail Handler',
           provider: 'claude',
           model: 'claude-3-5-sonnet-20241022',
           operation: 'generate',
-          prompt: '很遗憾未通过，分数：{{input.score}}。请继续努力！',
+          prompt: 'Unfortunately, you did not pass. Your score: {{input.score}}. Keep trying!',
           temperature: 0.7,
         },
       },
@@ -162,15 +162,15 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
   },
 
   {
-    name: '定时 Webhook',
-    description: '定时触发并调用 Webhook',
+    name: 'Scheduled Webhook',
+    description: 'Trigger webhook on schedule',
     nodes: [
       {
         id: 'schedule-1',
         type: 'schedule',
         position: { x: 100, y: 200 },
         data: {
-          label: '每日定时',
+          label: 'Daily Schedule',
           type: 'schedule',
           schedule: '0 9 * * *',
         },
@@ -180,7 +180,7 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
         type: 'http',
         position: { x: 350, y: 200 },
         data: {
-          label: '发送通知',
+          label: 'Send Notification',
           method: 'POST',
           url: 'https://hooks.example.com/notify',
           body: '{"event": "daily_report"}',
@@ -193,7 +193,7 @@ export const workflowTemplates: Partial<WorkflowDefinition>[] = [
   },
 ];
 
-// 获取模板列表
+// Get template list
 export function getTemplateList() {
   return workflowTemplates.map((t, i) => ({
     id: `template-${i}`,
@@ -203,7 +203,7 @@ export function getTemplateList() {
   }));
 }
 
-// 根据 ID 获取模板
+// Get template by ID
 export function getTemplateById(id: string) {
   const index = parseInt(id.replace('template-', ''));
   return workflowTemplates[index] || null;

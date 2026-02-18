@@ -35,7 +35,7 @@ export function useExecutions(): UseExecutionsReturn {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // 加载执行历史
+  // Load execution history
   const loadExecutions = useCallback(async (workflowId?: string) => {
     if (!user) return;
 
@@ -57,13 +57,13 @@ export function useExecutions(): UseExecutionsReturn {
       if (error) throw error;
       setExecutions(data || []);
     } catch (err) {
-      setError(err instanceof Error ? err.message : '加载失败');
+      setError(err instanceof Error ? err.message : 'Failed to load');
     } finally {
       setLoading(false);
     }
   }, [user]);
 
-  // 创建执行记录
+  // Create execution record
   const createExecution = useCallback(async (
     workflowId: string,
     input?: Record<string, unknown>
@@ -87,12 +87,12 @@ export function useExecutions(): UseExecutionsReturn {
       if (error) throw error;
       return data.id;
     } catch (err) {
-      setError(err instanceof Error ? err.message : '创建执行记录失败');
+      setError(err instanceof Error ? err.message : 'Failed to create execution record');
       return null;
     }
   }, [user]);
 
-  // 更新执行记录
+  // Update execution record
   const updateExecution = useCallback(async (
     executionId: string,
     data: UpdateExecutionInput
@@ -106,18 +106,18 @@ export function useExecutions(): UseExecutionsReturn {
       if (error) throw error;
       return true;
     } catch (err) {
-      setError(err instanceof Error ? err.message : '更新执行记录失败');
+      setError(err instanceof Error ? err.message : 'Failed to update execution record');
       return false;
     }
   }, []);
 
-  // 记录节点执行
+  // Record node execution
   const recordNodeExecution = useCallback(async (
     executionId: string,
     nodeExecution: NodeExecution
   ): Promise<void> => {
     try {
-      // 先获取当前的 node_executions
+      // Get current node_executions first
       const { data: current } = await supabase
         .from('workflow_executions')
         .select('node_executions')
@@ -126,7 +126,7 @@ export function useExecutions(): UseExecutionsReturn {
 
       const nodeExecutions = (current?.node_executions || []) as NodeExecution[];
 
-      // 更新或添加节点执行记录
+      // Update or add node execution record
       const existingIndex = nodeExecutions.findIndex(ne => ne.nodeId === nodeExecution.nodeId);
       if (existingIndex >= 0) {
         nodeExecutions[existingIndex] = nodeExecution;
@@ -139,11 +139,11 @@ export function useExecutions(): UseExecutionsReturn {
         .update({ node_executions: nodeExecutions })
         .eq('id', executionId);
     } catch (err) {
-      console.error('记录节点执行失败:', err);
+      console.error('Failed to record node execution:', err);
     }
   }, []);
 
-  // 开始执行
+  // Start execution
   const startExecution = useCallback(async (executionId: string): Promise<void> => {
     await updateExecution(executionId, {
       status: 'running',
@@ -151,12 +151,12 @@ export function useExecutions(): UseExecutionsReturn {
     });
   }, [updateExecution]);
 
-  // 完成执行
+  // Complete execution
   const completeExecution = useCallback(async (
     executionId: string,
     output: Record<string, unknown>
   ): Promise<void> => {
-    // 获取开始时间计算执行时长
+    // Get start time to calculate execution duration
     const { data } = await supabase
       .from('workflow_executions')
       .select('started_at')
@@ -174,7 +174,7 @@ export function useExecutions(): UseExecutionsReturn {
       ...(executionTimeMs !== undefined && { execution_time_ms: executionTimeMs }),
     });
 
-    // 更新用户使用量
+    // Update user usage
     if (user) {
       const currentMonth = new Date().toISOString().slice(0, 7);
       try {
@@ -195,12 +195,12 @@ export function useExecutions(): UseExecutionsReturn {
             });
         }
       } catch (err) {
-        console.error('更新使用量失败:', err);
+        console.error('Failed to update usage:', err);
       }
     }
   }, [updateExecution, user]);
 
-  // 执行失败
+  // Execution failed
   const failExecution = useCallback(async (
     executionId: string,
     errorMsg: string
