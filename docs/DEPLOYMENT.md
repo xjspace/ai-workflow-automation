@@ -1,5 +1,30 @@
 # 部署指南
 
+## 0. 创建 GitHub 仓库
+
+### 0.1 在 GitHub 创建新仓库
+
+1. 访问 [GitHub](https://github.com/new)
+2. 填写仓库信息：
+   - Repository name: `ai-workflow-automation`
+   - Description: `AI 原生工作流自动化平台`
+   - Visibility: Public (用于 Vercel 部署)
+   - **不要**勾选 "Add a README file" (已有代码)
+3. 点击 "Create repository"
+
+### 0.2 推送代码到 GitHub
+
+```bash
+cd G:/ai-workflow-automation
+
+# 添加远程仓库 (替换 YOUR_USERNAME)
+git remote add origin https://github.com/YOUR_USERNAME/ai-workflow-automation.git
+
+# 推送到 main 分支
+git branch -M main
+git push -u origin main
+```
+
 ## 1. Supabase 配置
 
 ### 1.1 创建 Supabase 项目
