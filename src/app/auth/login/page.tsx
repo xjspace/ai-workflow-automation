@@ -17,8 +17,10 @@ export default function AuthPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState<string | null>(null);
   const [error, setError] = useState('');
-  const { signIn, signUp } = useAuth();
+  const [success, setSuccess] = useState('');
+  const { signIn, signUp, signInWithOAuth } = useAuth();
   const { t } = useLocale();
   const router = useRouter();
 
@@ -33,7 +35,7 @@ export default function AuthPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push('/');
+      router.push('/dashboard');
     }
   };
 
@@ -41,6 +43,7 @@ export default function AuthPage() {
     e.preventDefault();
     setLoading(true);
     setError('');
+    setSuccess('');
 
     const { error } = await signUp(email, password);
 
@@ -48,10 +51,83 @@ export default function AuthPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      setError(t('auth.register.checkEmail'));
+      setSuccess(t('auth.register.checkEmail'));
       setLoading(false);
     }
   };
+
+  const handleOAuth = async (provider: 'google' | 'github' | 'apple') => {
+    setOauthLoading(provider);
+    setError('');
+
+    const { error } = await signInWithOAuth(provider);
+
+    if (error) {
+      setError(error.message);
+      setOauthLoading(null);
+    }
+    // OAuth 会重定向，所以不需要设置 loading 为 false
+  };
+
+  const OAuthButtons = () => (
+    <div className="space-y-3">
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-gray-200" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-white px-2 text-gray-500">{t('auth.oauth.or')}</span>
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-3">
+        <Button
+          variant="outline"
+          type="button"
+          disabled={oauthLoading !== null}
+          onClick={() => handleOAuth('google')}
+          className="w-full"
+        >
+          {oauthLoading === 'google' ? (
+            <span className="animate-spin">⏳</span>
+          ) : (
+            <span>🔵</span>
+          )}
+          <span className="ml-2 hidden sm:inline">{t('auth.oauth.google')}</span>
+        </Button>
+
+        <Button
+          variant="outline"
+          type="button"
+          disabled={oauthLoading !== null}
+          onClick={() => handleOAuth('github')}
+          className="w-full"
+        >
+          {oauthLoading === 'github' ? (
+            <span className="animate-spin">⏳</span>
+          ) : (
+            <span>⚫</span>
+          )}
+          <span className="ml-2 hidden sm:inline">{t('auth.oauth.github')}</span>
+        </Button>
+
+        <Button
+          variant="outline"
+          type="button"
+          disabled={oauthLoading !== null}
+          onClick={() => handleOAuth('apple')}
+          className="w-full"
+        >
+          {oauthLoading === 'apple' ? (
+            <span className="animate-spin">⏳</span>
+          ) : (
+            <span>🍎</span>
+          )}
+          <span className="ml-2 hidden sm:inline">{t('auth.oauth.apple')}</span>
+        </Button>
+      </div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 px-4">
@@ -70,7 +146,7 @@ export default function AuthPage() {
               <TabsTrigger value="register">{t('auth.tabs.register')}</TabsTrigger>
             </TabsList>
 
-            <TabsContent value="login">
+            <TabsContent value="login" className="space-y-4">
               <form onSubmit={handleSignIn} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">{t('auth.login.email')}</Label>
@@ -99,9 +175,11 @@ export default function AuthPage() {
                   {loading ? t('auth.login.logging') : t('auth.login.submit')}
                 </Button>
               </form>
+
+              <OAuthButtons />
             </TabsContent>
 
-            <TabsContent value="register">
+            <TabsContent value="register" className="space-y-4">
               <form onSubmit={handleSignUp} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="register-email">{t('auth.login.email')}</Label>
@@ -127,10 +205,13 @@ export default function AuthPage() {
                   />
                 </div>
                 {error && <p className="text-sm text-red-500">{error}</p>}
+                {success && <p className="text-sm text-green-600">{success}</p>}
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? t('auth.register.registering') : t('auth.register.submit')}
                 </Button>
               </form>
+
+              <OAuthButtons />
             </TabsContent>
           </Tabs>
 

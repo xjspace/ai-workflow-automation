@@ -156,6 +156,49 @@ const en: Record<string, string> = {
   // Dashboard
   'dashboard.exampleWorkflow': 'Example Workflow',
   'dashboard.exampleWorkflowDesc': 'This is an example AI workflow',
+
+  // Pricing
+  'pricing.title': 'Simple, Transparent Pricing',
+  'pricing.recommended': 'Recommended',
+  'pricing.getStarted': 'Get Started',
+  'pricing.upgrade': 'Upgrade to Pro',
+  'pricing.contact': 'Contact Us',
+  'pricing.free.name': 'Free',
+  'pricing.free.price': '$0',
+  'pricing.free.feature1': '100 runs/month',
+  'pricing.free.feature2': '5 workflows',
+  'pricing.free.feature3': 'Basic templates',
+  'pricing.free.feature4': 'Community support',
+  'pricing.pro.name': 'Pro',
+  'pricing.pro.price': '$9',
+  'pricing.pro.feature1': '5000 runs/month',
+  'pricing.pro.feature2': 'Unlimited workflows',
+  'pricing.pro.feature3': 'All templates',
+  'pricing.pro.feature4': 'Priority support',
+  'pricing.team.name': 'Team',
+  'pricing.team.price': '$29',
+  'pricing.team.feature1': '20000 runs/month',
+  'pricing.team.feature2': 'Team collaboration',
+  'pricing.team.feature3': 'API access',
+  'pricing.team.feature4': 'Dedicated support',
+
+  // CTA
+  'cta.title': 'Ready to Get Started?',
+  'cta.subtitle': 'Sign up in 30 seconds and create your first AI workflow',
+
+  // Footer
+  'footer.docs': 'Docs',
+  'footer.blog': 'Blog',
+  'footer.privacy': 'Privacy',
+  'footer.terms': 'Terms',
+  'footer.rights': 'All rights reserved.',
+
+  // OAuth
+  'auth.oauth.or': 'or continue with',
+  'auth.oauth.google': 'Google',
+  'auth.oauth.github': 'GitHub',
+  'auth.oauth.apple': 'Apple',
+  'auth.oauth.signingIn': 'Signing in...',
 };
 
 // 中文翻译
@@ -309,6 +352,49 @@ const zh: Record<string, string> = {
   // Dashboard
   'dashboard.exampleWorkflow': '示例工作流',
   'dashboard.exampleWorkflowDesc': '这是一个示例 AI 工作流',
+
+  // Pricing
+  'pricing.title': '简单透明的定价',
+  'pricing.recommended': '推荐',
+  'pricing.getStarted': '开始使用',
+  'pricing.upgrade': '升级专业版',
+  'pricing.contact': '联系我们',
+  'pricing.free.name': '免费版',
+  'pricing.free.price': '¥0',
+  'pricing.free.feature1': '100 次执行/月',
+  'pricing.free.feature2': '5 个工作流',
+  'pricing.free.feature3': '基础模板',
+  'pricing.free.feature4': '社区支持',
+  'pricing.pro.name': '专业版',
+  'pricing.pro.price': '¥49',
+  'pricing.pro.feature1': '5000 次执行/月',
+  'pricing.pro.feature2': '无限工作流',
+  'pricing.pro.feature3': '所有模板',
+  'pricing.pro.feature4': '优先支持',
+  'pricing.team.name': '团队版',
+  'pricing.team.price': '¥149',
+  'pricing.team.feature1': '20000 次执行/月',
+  'pricing.team.feature2': '团队协作',
+  'pricing.team.feature3': 'API 访问',
+  'pricing.team.feature4': '专属支持',
+
+  // CTA
+  'cta.title': '准备好开始了吗？',
+  'cta.subtitle': '30 秒注册，立即开始创建你的第一个 AI 工作流',
+
+  // Footer
+  'footer.docs': '文档',
+  'footer.blog': '博客',
+  'footer.privacy': '隐私政策',
+  'footer.terms': '服务条款',
+  'footer.rights': '保留所有权利',
+
+  // OAuth
+  'auth.oauth.or': '或使用以下方式',
+  'auth.oauth.google': 'Google',
+  'auth.oauth.github': 'GitHub',
+  'auth.oauth.apple': 'Apple',
+  'auth.oauth.signingIn': '登录中...',
 };
 
 const translations: Record<Locale, Record<string, string>> = { en, zh };
