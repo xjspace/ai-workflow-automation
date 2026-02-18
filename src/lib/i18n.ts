@@ -199,6 +199,51 @@ const en: Record<string, string> = {
   'auth.oauth.github': 'GitHub',
   'auth.oauth.apple': 'Apple',
   'auth.oauth.signingIn': 'Signing in...',
+
+  // Billing
+  'billing.title': 'Billing & Subscription',
+  'billing.currentPlan': 'Current Plan',
+  'billing.usage': 'Usage This Month',
+  'billing.workflows': 'Workflows',
+  'billing.executions': 'Executions',
+  'billing.aiCredits': 'AI Credits',
+  'billing.orderHistory': 'Order History',
+  'billing.noOrders': 'No orders yet',
+  'billing.paymentMethod': 'Payment Method',
+  'billing.noPaymentMethod': 'No payment method on file',
+  'billing.upgrade': 'Upgrade Plan',
+  'billing.changePlan': 'Change Plan',
+  'billing.cancel': 'Cancel Subscription',
+  'billing.renewsOn': 'Renews on',
+  'billing.freeForever': 'Free forever',
+  'billing.manage': 'Manage',
+  'billing.paid': 'Paid',
+  'billing.failed': 'Failed',
+  'billing.pending': 'Pending',
+
+  // Plans
+  'plans.free': 'Free',
+  'plans.pro': 'Pro',
+  'plans.team': 'Team',
+  'plans.enterprise': 'Enterprise',
+  'plans.mostPopular': 'Most Popular',
+  'plans.monthly': 'Monthly',
+  'plans.yearly': 'Yearly',
+  'plans.save': 'Save',
+  'plans.contactSales': 'Contact Sales',
+  'plans.subscribe': 'Subscribe',
+  'plans.getStarted': 'Get Started',
+
+  // FAQ
+  'faq.title': 'Frequently Asked Questions',
+  'faq.changePlan': 'Can I change my plan?',
+  'faq.changePlanAnswer': 'Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately.',
+  'faq.paymentMethods': 'What payment methods?',
+  'faq.paymentMethodsAnswer': 'We accept credit cards, PayPal, and other major payment methods through LemonSqueezy.',
+  'faq.refund': 'Is there a refund policy?',
+  'faq.refundAnswer': 'Yes, we offer a 14-day money-back guarantee for all paid plans.',
+  'faq.help': 'Need more help?',
+  'faq.helpAnswer': 'Contact our support team at support@takeovers.work',
 };
 
 // 中文翻译
@@ -395,6 +440,51 @@ const zh: Record<string, string> = {
   'auth.oauth.github': 'GitHub',
   'auth.oauth.apple': 'Apple',
   'auth.oauth.signingIn': '登录中...',
+
+  // Billing
+  'billing.title': '计费与订阅',
+  'billing.currentPlan': '当前套餐',
+  'billing.usage': '本月使用量',
+  'billing.workflows': '工作流',
+  'billing.executions': '执行次数',
+  'billing.aiCredits': 'AI 额度',
+  'billing.orderHistory': '订单历史',
+  'billing.noOrders': '暂无订单',
+  'billing.paymentMethod': '支付方式',
+  'billing.noPaymentMethod': '暂无支付方式',
+  'billing.upgrade': '升级套餐',
+  'billing.changePlan': '更换套餐',
+  'billing.cancel': '取消订阅',
+  'billing.renewsOn': '续期于',
+  'billing.freeForever': '永久免费',
+  'billing.manage': '管理',
+  'billing.paid': '已支付',
+  'billing.failed': '失败',
+  'billing.pending': '待支付',
+
+  // Plans
+  'plans.free': '免费版',
+  'plans.pro': '专业版',
+  'plans.team': '团队版',
+  'plans.enterprise': '企业版',
+  'plans.mostPopular': '最受欢迎',
+  'plans.monthly': '按月',
+  'plans.yearly': '按年',
+  'plans.save': '省',
+  'plans.contactSales': '联系销售',
+  'plans.subscribe': '订阅',
+  'plans.getStarted': '开始使用',
+
+  // FAQ
+  'faq.title': '常见问题',
+  'faq.changePlan': '可以更换套餐吗？',
+  'faq.changePlanAnswer': '可以！您可以随时升级或降级套餐。更改立即生效。',
+  'faq.paymentMethods': '支持哪些支付方式？',
+  'faq.paymentMethodsAnswer': '我们通过 LemonSqueezy 支持信用卡、PayPal 等主流支付方式。',
+  'faq.refund': '有退款政策吗？',
+  'faq.refundAnswer': '是的，所有付费套餐均提供14天退款保证。',
+  'faq.help': '需要更多帮助？',
+  'faq.helpAnswer': '联系我们的支持团队：support@takeovers.work',
 };
 
 const translations: Record<Locale, Record<string, string>> = { en, zh };
