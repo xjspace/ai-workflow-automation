@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase';
+import { createSupabaseApiClient } from '@/lib/supabase';
 import { useWorkflowStore } from '@/store/workflow-store';
 import { WorkflowExecutor } from '@/lib/workflow-executor';
 
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
 
     // 有认证时，从数据库获取
     const token = authHeader.replace('Bearer ', '');
-    const supabase = createServerClient();
+    const supabase = createSupabaseApiClient(token);
 
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) {
@@ -122,7 +122,7 @@ export async function POST(request: NextRequest) {
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const supabase = createServerClient();
+    const supabase = createSupabaseApiClient(token);
 
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) {

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@/lib/supabase';
+import { createSupabaseApiClient } from '@/lib/supabase';
 
 // GET /api/workflows/[id] - 获取单个工作流
 export async function GET(
@@ -14,7 +14,7 @@ export async function GET(
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const supabase = createServerClient();
+    const supabase = createSupabaseApiClient(token);
 
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) {
@@ -52,7 +52,7 @@ export async function PUT(
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const supabase = createServerClient();
+    const supabase = createSupabaseApiClient(token);
 
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) {
@@ -106,7 +106,7 @@ export async function DELETE(
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const supabase = createServerClient();
+    const supabase = createSupabaseApiClient(token);
 
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) {
