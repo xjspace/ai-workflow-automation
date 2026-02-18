@@ -21,7 +21,7 @@ export default function AuthPage() {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const { signIn, signUp, signInWithOAuth } = useAuth();
-  const { t } = useLocale();
+  const { t, locale } = useLocale();
   const router = useRouter();
 
   const handleSignIn = async (e: React.FormEvent) => {
@@ -174,6 +174,14 @@ export default function AuthPage() {
                 <Button type="submit" className="w-full" disabled={loading}>
                   {loading ? t('auth.login.logging') : t('auth.login.submit')}
                 </Button>
+                <div className="text-center">
+                  <a
+                    href="/auth/forgot-password"
+                    className="text-sm text-blue-600 hover:underline"
+                  >
+                    {locale === 'en' ? 'Forgot password?' : '忘记密码？'}
+                  </a>
+                </div>
               </form>
 
               <OAuthButtons />
