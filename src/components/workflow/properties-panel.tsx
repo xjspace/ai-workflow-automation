@@ -1,7 +1,7 @@
 'use client';
 
 import { useWorkflowStore } from '@/store/workflow-store';
-import { nodeConfig, AINodeData, HTTPNodeData, ConditionNodeData } from '@/types/workflow';
+import { nodeConfig, AINodeData, HTTPNodeData, ConditionNodeData, TriggerNodeData } from '@/types/workflow';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -45,7 +45,7 @@ export function PropertiesPanel() {
     );
   }
 
-  const handleUpdate = (updates: Record<string, any>) => {
+  const handleUpdate = (updates: Record<string, unknown>) => {
     updateNode(selectedNodeId!, updates);
   };
 
@@ -230,7 +230,7 @@ export function PropertiesPanel() {
             <div className="space-y-2">
               <Label className="text-xs">触发类型</Label>
               <Select
-                value={(selectedNode.data as any).type || 'manual'}
+                value={(selectedNode.data as TriggerNodeData).type || 'manual'}
                 onValueChange={(value) => handleUpdate({ type: value })}
               >
                 <SelectTrigger className="h-8 text-sm">

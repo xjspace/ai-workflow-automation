@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { NodeType, WorkflowNode, WorkflowEdge, WorkflowDefinition, nodeConfig } from '@/types/workflow';
+import type { NodeType, WorkflowNode, WorkflowEdge, WorkflowDefinition } from '@/types/workflow';
 
 interface WorkflowState {
   // 当前工作流
@@ -105,6 +105,7 @@ export const useWorkflowStore = create<WorkflowState>()(
             method: type === 'http' ? 'GET' : undefined,
             url: type === 'http' ? '' : undefined,
             expression: type === 'condition' ? '' : undefined,
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         };
         set((state) => {

@@ -35,30 +35,30 @@ export function WorkflowList({ onSelect, onCreateNew }: WorkflowListProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const loadWorkflows = async () => {
+      setLoading(true);
+      try {
+        if (user) {
+          // 已登录用户从数据库加载
+          const { data, error } = await supabase
+            .from('workflows')
+            .select('*')
+            .eq('user_id', user.id)
+            .order('updated_at', { ascending: false });
+
+          if (!error && data) {
+            setWorkflows(data);
+          }
+        }
+      } catch (error) {
+        console.error('加载工作流失败:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     loadWorkflows();
   }, [user]);
-
-  const loadWorkflows = async () => {
-    setLoading(true);
-    try {
-      if (user) {
-        // 已登录用户从数据库加载
-        const { data, error } = await supabase
-          .from('workflows')
-          .select('*')
-          .eq('user_id', user.id)
-          .order('updated_at', { ascending: false });
-
-        if (!error && data) {
-          setWorkflows(data);
-        }
-      }
-    } catch (error) {
-      console.error('加载工作流失败:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleDelete = async (id: string, e: React.MouseEvent) => {
     e.stopPropagation();

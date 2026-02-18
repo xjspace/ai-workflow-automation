@@ -3,13 +3,15 @@
  * 负责执行工作流中的各个节点
  */
 
-import type { WorkflowNode, WorkflowEdge, WorkflowNodeData, AINodeData, HTTPNodeData } from '@/types/workflow';
+import type { WorkflowNode, WorkflowEdge, AINodeData, HTTPNodeData, ConditionNodeData, TransformNodeData } from '@/types/workflow';
 
 // 执行上下文
 export interface ExecutionContext {
   workflowId: string;
   executionId: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variables: Record<string, any>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   nodeOutputs: Record<string, any>;
   startTime: Date;
 }
@@ -17,6 +19,7 @@ export interface ExecutionContext {
 // 执行结果
 export interface ExecutionResult {
   success: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   output?: any;
   error?: string;
   duration: number;
@@ -27,6 +30,7 @@ export interface ExecutionResult {
 export interface NodeResult {
   nodeId: string;
   success: boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   output?: any;
   error?: string;
   duration: number;
@@ -46,6 +50,7 @@ export class WorkflowExecutor {
   async execute(
     nodes: WorkflowNode[],
     edges: WorkflowEdge[],
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     input?: any
   ): Promise<ExecutionResult> {
     const startTime = Date.now();
@@ -122,10 +127,8 @@ export class WorkflowExecutor {
   /**
    * 执行单个节点
    */
-  private async executeNode(
-    node: WorkflowNode,
-    context: ExecutionContext
-  ): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async executeNode(node: WorkflowNode, context: ExecutionContext): Promise<any> {
     switch (node.type) {
       case 'trigger':
       case 'webhook':
@@ -155,10 +158,8 @@ export class WorkflowExecutor {
   /**
    * 执行触发器节点
    */
-  private async executeTrigger(
-    node: WorkflowNode,
-    context: ExecutionContext
-  ): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async executeTrigger(node: WorkflowNode, context: ExecutionContext): Promise<any> {
     // 触发器节点返回输入数据
     return context.variables.input || {};
   }
@@ -166,10 +167,8 @@ export class WorkflowExecutor {
   /**
    * 执行 AI 节点
    */
-  private async executeAI(
-    node: WorkflowNode,
-    context: ExecutionContext
-  ): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async executeAI(node: WorkflowNode, context: ExecutionContext): Promise<any> {
     const data = node.data as AINodeData;
 
     // 替换提示词中的变量
@@ -197,10 +196,8 @@ export class WorkflowExecutor {
   /**
    * 执行 HTTP 节点
    */
-  private async executeHTTP(
-    node: WorkflowNode,
-    context: ExecutionContext
-  ): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async executeHTTP(node: WorkflowNode, context: ExecutionContext): Promise<any> {
     const data = node.data as HTTPNodeData;
 
     // 替换 URL 中的变量
@@ -234,11 +231,9 @@ export class WorkflowExecutor {
   /**
    * 执行条件节点
    */
-  private async executeCondition(
-    node: WorkflowNode,
-    context: ExecutionContext
-  ): Promise<any> {
-    const data = node.data as any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async executeCondition(node: WorkflowNode, context: ExecutionContext): Promise<any> {
+    const data = node.data as ConditionNodeData;
 
     // 评估表达式
     const result = this.evaluateExpression(data.expression, context);
@@ -249,11 +244,9 @@ export class WorkflowExecutor {
   /**
    * 执行转换节点
    */
-  private async executeTransform(
-    node: WorkflowNode,
-    context: ExecutionContext
-  ): Promise<any> {
-    const data = node.data as any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async executeTransform(node: WorkflowNode, context: ExecutionContext): Promise<any> {
+    const data = node.data as TransformNodeData;
 
     // 执行转换表达式
     return this.evaluateExpression(data.expression, context);
@@ -262,10 +255,8 @@ export class WorkflowExecutor {
   /**
    * 执行循环节点
    */
-  private async executeLoop(
-    node: WorkflowNode,
-    context: ExecutionContext
-  ): Promise<any> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private async executeLoop(_node: WorkflowNode, _context: ExecutionContext): Promise<any> {
     // 循环节点需要特殊处理，这里简化实现
     return { loop: true };
   }
@@ -310,6 +301,7 @@ export class WorkflowExecutor {
   /**
    * 对象插值
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private interpolateObject(obj: any, context: ExecutionContext): any {
     if (typeof obj === 'string') {
       return this.interpolateString(obj, context);
@@ -318,6 +310,7 @@ export class WorkflowExecutor {
       return obj.map((item) => this.interpolateObject(item, context));
     }
     if (typeof obj === 'object' && obj !== null) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const result: any = {};
       for (const [key, value] of Object.entries(obj)) {
         result[key] = this.interpolateObject(value, context);
@@ -330,9 +323,11 @@ export class WorkflowExecutor {
   /**
    * 根据路径获取值
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private getValueByPath(obj: any, path: string): any {
     const parts = path.split('.');
-    let current = obj;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    let current: any = obj;
 
     for (const part of parts) {
       if (current === null || current === undefined) return undefined;
@@ -353,6 +348,7 @@ export class WorkflowExecutor {
   /**
    * 评估表达式
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private evaluateExpression(expression: string, context: ExecutionContext): any {
     // 安全的表达式评估 (使用 Function 构造器)
     try {
@@ -369,6 +365,7 @@ export class WorkflowExecutor {
 
   // AI API 调用方法
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async callClaudeAPI(prompt: string, data: AINodeData): Promise<any> {
     const apiKey = this.apiKeys.claude || process.env.ANTHROPIC_API_KEY;
 
@@ -403,6 +400,7 @@ export class WorkflowExecutor {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async callOpenAIAPI(prompt: string, data: AINodeData): Promise<any> {
     const apiKey = this.apiKeys.openai || process.env.OPENAI_API_KEY;
 
@@ -436,6 +434,7 @@ export class WorkflowExecutor {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async callDeepSeekAPI(prompt: string, data: AINodeData): Promise<any> {
     const apiKey = this.apiKeys.deepseek || process.env.DEEPSEEK_API_KEY;
 
@@ -469,6 +468,7 @@ export class WorkflowExecutor {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private async callZhipuAPI(prompt: string, data: AINodeData): Promise<any> {
     const apiKey = this.apiKeys.zhipu || process.env.ZHIPU_API_KEY;
 

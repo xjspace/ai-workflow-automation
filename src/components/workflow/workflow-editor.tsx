@@ -49,7 +49,7 @@ export function WorkflowEditor() {
       position: node.position,
       data: node.data as unknown as Record<string, unknown>,
     }));
-  }, [currentWorkflow?.nodes]);
+  }, [currentWorkflow]);
 
   const initialEdges = useMemo(() => {
     if (!currentWorkflow) return [];
@@ -63,7 +63,7 @@ export function WorkflowEditor() {
       animated: true,
       style: { stroke: '#6366f1' },
     }));
-  }, [currentWorkflow?.edges]);
+  }, [currentWorkflow]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);

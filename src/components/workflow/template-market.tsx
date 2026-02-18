@@ -1,6 +1,6 @@
 'use client';
 
-import { workflowTemplates, getTemplateList } from '@/data/workflow-templates';
+import { workflowTemplates } from '@/data/workflow-templates';
 import { useWorkflowStore } from '@/store/workflow-store';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -11,7 +11,7 @@ interface TemplateMarketProps {
 }
 
 export function TemplateMarket({ onClose }: TemplateMarketProps) {
-  const { createWorkflow, currentWorkflow, addNode, addEdge } = useWorkflowStore();
+  const { createWorkflow } = useWorkflowStore();
 
   const handleUseTemplate = (templateIndex: number) => {
     const template = workflowTemplates[templateIndex];

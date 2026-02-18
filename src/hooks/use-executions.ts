@@ -175,8 +175,30 @@ export function useExecutions(): UseExecutionsReturn {
     });
 
     // 更新用户使用量
-    await incrementUsage();
-  }, [updateExecution]);
+    if (user) {
+      const currentMonth = new Date().toISOString().slice(0, 7);
+      try {
+        const { error: updateError } = await supabase.rpc('increment_usage', {
+          p_user_id: user.id,
+          p_month: currentMonth,
+        });
+
+        if (updateError) {
+          await supabase
+            .from('user_usage')
+            .upsert({
+              user_id: user.id,
+              month: currentMonth,
+              execution_count: 1,
+            }, {
+              onConflict: 'user_id',
+            });
+        }
+      } catch (err) {
+        console.error('更新使用量失败:', err);
+      }
+    }
+  }, [updateExecution, user]);
 
   // 执行失败
   const failExecution = useCallback(async (
@@ -189,36 +211,6 @@ export function useExecutions(): UseExecutionsReturn {
       completed_at: new Date().toISOString(),
     });
   }, [updateExecution]);
-
-  // 增加用户使用量
-  const incrementUsage = async () => {
-    if (!user) return;
-
-    const currentMonth = new Date().toISOString().slice(0, 7); // YYYY-MM
-
-    try {
-      // 尝试更新
-      const { error: updateError } = await supabase.rpc('increment_usage', {
-        p_user_id: user.id,
-        p_month: currentMonth,
-      });
-
-      // 如果 RPC 不存在，使用 upsert
-      if (updateError) {
-        await supabase
-          .from('user_usage')
-          .upsert({
-            user_id: user.id,
-            month: currentMonth,
-            execution_count: 1,
-          }, {
-            onConflict: 'user_id',
-          });
-      }
-    } catch (err) {
-      console.error('更新使用量失败:', err);
-    }
-  };
 
   return {
     executions,
